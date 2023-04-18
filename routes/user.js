@@ -20,7 +20,7 @@ userRouter.get("/users/:userId", (req,res) =>{
 })
 
 userRouter.post("/users/", (req,res) =>{
-  const { nane, about, avatar } = req.body;
+  const { name, about, avatar } = req.body;
 const user = {
   name,
   about,
