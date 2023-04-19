@@ -5,33 +5,38 @@ const User = require("../models/user")
 const userRouter = express.Router();
 
 
-userRouter.get("/users", (req, res) =>{
-  User.find().then(users =>{
-    res.send ({ data:user })
-  })
-  
+userRouter.get("/users", (req, res) => {
+  User.find({})
+    .then(users => res.send({ data: users }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка 1' }));
+
 })
 
-userRouter.get("/users/:userId", (req,res) =>{
-  const { id } =req.params;
+userRouter.get("/users/:userId", (req, res) => {
+  const { userId } = req.params;
   console.log(req.params)
-  const  user = users.find((user) => user.id === Number(id))
-  if(user) {
-    res.send({ data:user })
-  } else {
-    res.status(404).send({message: "user not found"})
-  }
+
+  User.findById(userId)
+    .then((user) => {
+      res.send({ data: user })
+    })
+    .catch((err) => {
+      console.log("err ==>", err)
+      if (err.message == "Not found") {
+        res.status(404).send({ message: "user not found" })
+      } else {
+        res.status(500).send({ message: "Something went wrong" })
+      }
+    })
 })
 
-userRouter.post("/users/", (req,res) =>{
+userRouter.post("/users/", (req, res) => {
   const { name, about, avatar } = req.body;
-const user = {
-  name,
-  about,
-  avatar
-}
-users.push(user);
-res.status(201).send({ data: user })
+
+  User.create({ name, about, avatar })
+    .then(user => res.send({ data: user }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка 2' }));
+
 })
 
 module.exports = userRouter
