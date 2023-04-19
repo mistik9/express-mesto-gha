@@ -1,11 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const User = require("../models/user")
 
 const userRouter = express.Router();
 
 
 userRouter.get("/users", (req, res) =>{
-  res.send ({ data:user })
+  User.find().then(users =>{
+    res.send ({ data:user })
+  })
+  
 })
 
 userRouter.get("/users/:userId", (req,res) =>{
