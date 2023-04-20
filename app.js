@@ -5,7 +5,17 @@ const cardRouter = require('./routes/card')
 
 const app = express();
 app.use(express.json());
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: '6440dff854af8905f3291cb3' // вставьте сюда _id созданного в предыдущем пункте пользователя
+  };
+
+  next();
+});
+
 app.use(userRouter);
+app.use(cardRouter);
 
 const { PORT = 3000 } = process.env;
 

@@ -1,11 +1,16 @@
 const express = require('express');
-const mongoose = require('mongoose');
-
+const { getCards, deleteCard, createCard, likeCard, disLikeCard } = require('../controllers/card')
 const cardRouter = express.Router();
 
+cardRouter.get("/cards", getCards )
+
+cardRouter.delete("/cards/:userId", deleteCard)
+
+cardRouter.post("/cards/", createCard)
+
+cardRouter.put("/cards/:cardId/likes ", likeCard)
+
+cardRouter.delete("/cards/:cardId/likes ", disLikeCard)
 
 
-cardRouter.get("/cards", (req, res) =>{
-  res.send ({ data:cards })
-})
 module.exports =cardRouter
