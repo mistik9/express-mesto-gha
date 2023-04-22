@@ -1,16 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const userRouter = require('./routes/user')
 const cardRouter = require('./routes/card')
 
 const app = express();
-app.use(express.json());
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '6440dff854af8905f3291cb3' // вставьте сюда _id созданного в предыдущем пункте пользователя
+    _id: '644155fc0562b571ce829cfd' // вставьте сюда _id созданного в предыдущем пункте пользователя
   };
-
   next();
 });
 

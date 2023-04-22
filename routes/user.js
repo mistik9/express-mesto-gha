@@ -11,8 +11,8 @@ userRouter.get("/users/:userId", findUser)
 
 userRouter.post("/users/", createUser)
 
-userRouter.patch("/users/me", createUser)
+userRouter.patch("/users/me", updateUser)
 
-userRouter.patch("/users/me/avatar", createUser)
+userRouter.patch("/users/me/avatar", updateAvatar)
 
 module.exports = userRouter
