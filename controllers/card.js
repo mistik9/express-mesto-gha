@@ -1,97 +1,98 @@
-const Card = require('../models/card')
+const Card = require('../models/card');
+const {
+  OK,
+  BAD_REQUEST,
+  NOT_FOUND,
+  INTERNAL_SERVER,
+} = require('../errors');
 
 const getCards = (req, res) => {
-
   Card.find({})
-    .then(cards => res.send(cards))
-    .catch(() => res.status(500).send({ message: 'Something went wrong' })
-    )
+    .then((cards) => res.status(OK).send(cards))
+    .catch(() => res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
-  console.log(cardId)
   Card.findByIdAndRemove(cardId)
     .orFail(() => {
-      throw new Error("Not found");
+      throw new Error('Not found');
+    })
+    .then((card) => {
+      res.status(OK).send(card);
+    })
+    .catch((err) => {
+      if (err.message === 'Not found') {
+        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
+      } else {
+        res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' });
+      }
+    });
+};
+
+const createCard = (req, res) => {
+  const { name, link } = req.body;
+  const owner = req.user._id;
+
+  Card.create({ name, link, owner })
+    .then((card) => {
+      res.status(OK).send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: `${Object.values(err.errors).map((error) => error.message).join(', ')}` });
+      } else {
+        res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' });
+      }
+    });
+};
+
+const likeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+    .orFail(() => {
+      throw new Error('Not found');
     })
     .then((card) => {
       res.send(card);
     })
     .catch((err) => {
-      console.log("err ==>", err.message)
-      if (err.message === "Not found") {
-        res.status(404).send({ message: "card not found" })
+      if (err.message === 'Not found') {
+        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
       } else {
-        res.status(500).send({ message: "Something went wrong" })
+        res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' });
       }
-    })
+    });
 };
-
-const createCard = (req, res) => {
-  const { name, link } = req.body;
-
-  const owner = req.user._id;
-  console.log(res)
-  Card.create({ name, link, owner })
-    .then((card) => {
-      res.status(201).send(card)
-    })
-    .catch(() => res.status(500).send({ message: 'Something went wrong' }));
-
-};
-
-const likeCard = (req, res) => {
-  console.log(req.params.cardId)
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true },
-  )
-  .orFail(() => {
-    throw new Error("Not found");
-  })
-  .then((card) => {
-    res.send(card);
-  })
-  .catch((err) => {
-    console.log("err ==>", err.message)
-    if (err.message === "Not found") {
-      res.status(404).send({ message: "card not found" })
-    } else {
-      res.status(500).send({ message: "Something went wrong" })
-    }
-  })
-}
 
 const disLikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
-  .orFail(() => {
-    throw new Error("Not found");
-  })
-  .then((card) => {
-    res.send(card);
-  })
-  .catch((err) => {
-    console.log("err ==>", err.message)
-    if (err.message === "Not found") {
-      res.status(404).send({ message: "card not found" })
-    } else {
-      res.status(500).send({ message: "Something went wrong" })
-    }
-  })
-
-}
-
+    .orFail(() => {
+      throw new Error('Not found');
+    })
+    .then((card) => {
+      res.send(card);
+    })
+    .catch((err) => {
+      if (err.message === 'Not found') {
+        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
+      } else {
+        res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' });
+      }
+    });
+};
 
 module.exports = {
   getCards,
   deleteCard,
   createCard,
   likeCard,
-  disLikeCard
+  disLikeCard,
 };
