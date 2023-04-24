@@ -23,7 +23,9 @@ const findUser = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Not found') {
-        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
+        res.status(NOT_FOUND).send({ message: 'Пользовательне найден' });
+      } else if (err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' });
       }
