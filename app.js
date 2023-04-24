@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
+const { NOT_FOUND } = require('./errors');
 
 const { PORT = 3000 } = process.env;
 
@@ -22,6 +23,10 @@ app.use(cardRouter);
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(console.log('DB is connected'))
   .catch((err) => console.log(err));
+
+app.use((req, res) => {
+  res.status(NOT_FOUND).send({ message: 'Страница не найдена' });
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
