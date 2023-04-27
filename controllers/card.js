@@ -33,6 +33,7 @@ const deleteCard = (req, res) => {
 };
 
 const createCard = (req, res) => {
+  console.log(req.user);
   const { name, link } = req.body;
   const owner = req.user._id;
 
@@ -59,7 +60,7 @@ const likeCard = (req, res) => {
       throw new Error('Not found');
     })
     .then((card) => {
-      res.send(card);
+      res.status(OK).send(card);
     })
     .catch((err) => {
       if (err.message === 'Not found') {
@@ -82,7 +83,7 @@ const disLikeCard = (req, res) => {
       throw new Error('Not found');
     })
     .then((card) => {
-      res.send(card);
+      res.status(OK).send(card);
     })
     .catch((err) => {
       if (err.message === 'Not found') {
