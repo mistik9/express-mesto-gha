@@ -9,6 +9,7 @@ const {
 } = require('../errors');
 
 const getUsers = (req, res) => {
+  console.log(req);
   User.find({})
     .then((users) => res.send(users))
     .catch(() => res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' }));
@@ -35,8 +36,10 @@ const findUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  // const { name, about, avatar, email, password } = req.body;
+  //  const { name, about, avatar, email, password } = req.body;
+
   bcrypt.hash(req.body.password, 10)
+
     .then((hash) => User.create({
       name: req.body.name,
       about: req.body.about,
@@ -103,14 +106,15 @@ const updateAvatar = (req, res) => {
 };
 
 const login = (req, res) => {
-  const { email } = req.body;
-  return User.findUserByCredentials({ email }).select('+password')
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
-      res.send({ token });
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.status(OK).send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.name });
+      res.status(401).send({ message: 'Неправильные почта или па' });
     });
 };
 

@@ -21,22 +21,20 @@ app.use(express.json());
 //   next();
 // });
 
-app.use(userRouter);
-app.use(cardRouter);
-
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use(auth);
-app.use('/cards', require('./routes/card'));
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(console.log('DB is connected'))
   .catch((err) => console.log(err));
 
-app.use((req, res) => {
-  res.status(NOT_FOUND).send({ message: 'Страница не найдена' });
-});
+// app.use((req, res, next) => {
+//     console.log(req)
+//   res.status(NOT_FOUND).send({ message: 'Страница не найден' });
+// });
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
