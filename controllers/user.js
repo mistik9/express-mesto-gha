@@ -36,9 +36,8 @@ const findUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  //  const { name, about, avatar, email, password } = req.body;
-
-  bcrypt.hash(req.body.password, 10)
+  const { name, about, avatar, email, password } = req.body;
+   bcrypt.hash(req.body.password, 10)
 
     .then((hash) => User.create({
       name: req.body.name,
@@ -51,6 +50,7 @@ const createUser = (req, res) => {
       res.status(OK).send(user);
     })
     .catch((err) => {
+        console.log(err.code)
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: `${Object.values(err.errors).map((error) => error.message).join(', ')}` });
       } else {
@@ -114,7 +114,7 @@ const login = (req, res) => {
       res.status(OK).send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: 'Неправильные почта или па' });
+      res.status(401).send({ message: 'Неправильные почта или пароль' });
     });
 };
 
