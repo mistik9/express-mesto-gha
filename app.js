@@ -31,10 +31,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(console.log('DB is connected'))
   .catch((err) => console.log(err));
 
-// app.use((req, res, next) => {
-//     console.log(req)
-//   res.status(NOT_FOUND).send({ message: 'Страница не найден' });
-// });
+app.use((req, res, next) => {
+    console.log(req)
+  res.status(NOT_FOUND).send({ message: 'Страница не найден' });
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
