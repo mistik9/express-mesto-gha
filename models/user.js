@@ -5,15 +5,20 @@ const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    minlength: [2, 'Имя не может быть короче двух символов'],
+    maxlength: [30, 'Имя не может быть длиннее 30 символов'],
     default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
+    minlength: [2, 'Наименование не может быть короче двух символов'],
+    maxlength: [30, 'Наименование не может быть длиннее 30 символов'],
     default: 'Исследователь',
   },
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+     validate: [validator.isURL, 'Неправильный формат ссылки'],
   },
   email: {
     type: String,
@@ -31,12 +36,12 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или паро'));
+        return Promise.reject(new Error('Неправильные почта или пароль'));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или парол'));
+            return Promise.reject(new Error('Неправильные почта или пароль'));
           }
           return user;
         });
