@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
 const auth = require('./middlewares/auth');
-const { NOT_FOUND } = require('./errors');
+const { NOT_FOUND } = require('./utils/constants');
 const {
   createUser, login,
 } = require('./controllers/user');
@@ -32,7 +32,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .catch((err) => console.log(err));
 
 app.use((req, res, next) => {
-    console.log(req)
+  console.log(req);
   res.status(NOT_FOUND).send({ message: 'Страница не найден' });
 });
 

@@ -4,7 +4,7 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER,
-} = require('../errors');
+} = require('../utils/constants');
 
 const getCards = (req, res) => {
   Card.find({})
@@ -14,12 +14,19 @@ const getCards = (req, res) => {
 
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
-  Card.findByIdAndRemove(cardId)
+  Card.findById(cardId)
     .orFail(() => {
       throw new Error('Not found');
     })
     .then((card) => {
-      res.status(OK).send(card);
+      Card.deleteOne({ _id: card._id, owner: req.user._id })
+        .then((res) => {
+          if (res.deletedCount === 0) {
+            throw new Error('Карточка не прнадлежит пользователю');
+          } else {
+            res.status(OK).send({ message: 'Карточка удалена' });
+          }
+        });
     })
     .catch((err) => {
       if (err.message === 'Not found') {

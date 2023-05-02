@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const { RegExp } = require('../utils/constants');
 
 mongoose.set('toJSON', { useProjection: true });
-mongoose.set('toObject', { useProjection: true })
+mongoose.set('toObject', { useProjection: true });
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,7 +22,10 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    validate: [validator.isURL, 'Неправильный формат ссылки'],
+    validate: {
+      validator: (v) => RegExp.test(v),
+      message: 'Неправильный формат ссылки',
+    },
   },
   email: {
     type: String,
