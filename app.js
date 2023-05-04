@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
 const signinRouter = require('./routes/signin');
 const signupRouter = require('./routes/signup');
 const auth = require('./middlewares/auth');
 const { NOT_FOUND } = require('./utils/constants');
-const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 
@@ -40,5 +40,3 @@ app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
 app.use(errors());
-// app.use((err, req, res, next) => {
-// });

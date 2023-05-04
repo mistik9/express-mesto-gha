@@ -5,9 +5,7 @@ const {
   OK,
   BAD_REQUEST,
   UNAUTHORIZED,
-  FORBIDDEN,
   NOT_FOUND,
-  CONFLICT,
   INTERNAL_SERVER,
 
 } = require('../utils/constants');
@@ -119,7 +117,7 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.status(OK).send({ token });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(UNAUTHORIZED).send({ message: 'Неправильные почта или пароль' });
     });
 };

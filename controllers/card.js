@@ -20,7 +20,7 @@ const deleteCard = (req, res) => {
     })
     .then((card) => {
       Card.deleteOne({ _id: card._id, owner: req.user._id })
-        .then((res) => {
+        .then(() => {
           if (res.deletedCount === 0) {
             throw new Error('Карточка не прнадлежит пользователю');
           } else {
