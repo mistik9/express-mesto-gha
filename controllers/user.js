@@ -38,7 +38,7 @@ const findUser = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   // const {
   //   name, about, avatar, email, password,
   // } = req.body;
@@ -60,7 +60,8 @@ const createUser = (req, res) => {
       } else {
         res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' });
       }
-    });
+    })
+    .catch(next);
 };
 
 const updateUser = (req, res) => {

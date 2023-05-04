@@ -3,11 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
+const signinRouter = require('./routes/signin');
+const signupRouter = require('./routes/signup');
 const auth = require('./middlewares/auth');
 const { NOT_FOUND } = require('./utils/constants');
-const {
-  createUser, login,
-} = require('./controllers/user');
+const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,8 +21,8 @@ app.use(express.json());
 //   next();
 // });
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.use('/', signinRouter);
+app.use('/', signupRouter);
 
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
@@ -31,7 +31,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(console.log('DB is connected'))
   .catch((err) => console.log(err));
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   console.log(req);
   res.status(NOT_FOUND).send({ message: 'Страница не найден' });
 });
@@ -39,3 +39,6 @@ app.use((req, res, next) => {
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
+app.use(errors());
+// app.use((err, req, res, next) => {
+// });

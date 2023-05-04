@@ -40,7 +40,6 @@ const deleteCard = (req, res) => {
 };
 
 const createCard = (req, res) => {
-  console.log(req.user);
   const { name, link } = req.body;
   const owner = req.user._id;
 
