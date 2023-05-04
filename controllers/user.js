@@ -11,18 +11,19 @@ const {
   INTERNAL_SERVER,
 
 } = require('../utils/constants');
+const { NotFoundError, ServerError } = require('../utils/errors/index');
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() => res.status(INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' }));
+    .catch(() => res.status(ServerError).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const findUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail(() => {
-      throw new Error('Not found');
+      throw new NotFoundError();
     })
     .then((user) => {
       res.send(user);
@@ -71,7 +72,7 @@ const updateUser = (req, res) => {
     runValidators: true,
   })
     .orFail(() => {
-      throw new Error('Not found');
+      throw new NotFoundError();
     })
     .then((user) => {
       res.status(OK).send(user);
