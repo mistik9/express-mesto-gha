@@ -5,7 +5,6 @@ const { OK } = require('../utils/constants');
 const {
   AuthError, BadRequestError, ConflictError, NotFoundError,
 } = require('../utils/errors/index');
-// const { Error } = require('mongoose');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -24,7 +23,7 @@ const findUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError({ message: `'Переданы некорректные данные${Object.values(err.errors).map((error) => error.message).join(', ')}` }));
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -50,7 +49,6 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким электронным адресом уже зарегистрирован'));
-        return;
       } if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при регистрации пользователя'));
       } else {
@@ -108,7 +106,7 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.status(OK).send({ token });
-      throw new AuthError('Неправильные почта и пароль');
+      next(new AuthError('Неправильные почта и пароль'));
     })
     .catch(next);
 };

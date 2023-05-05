@@ -30,7 +30,7 @@ const deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError({ message: `'Переданы некорректные данные${Object.values(err.errors).map((error) => error.message).join(', ')}` }));
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -46,8 +46,9 @@ const createCard = (req, res, next) => {
       res.status(OK).send(card);
     })
     .catch((err) => {
+      console.log(err.name)
       if (err.name === 'ValidationError') {
-        next(new BadRequestError({ message: `'Переданы некорректные данные${Object.values(err.errors).map((error) => error.message).join(', ')}` }));
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -68,7 +69,7 @@ const likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError({ message: `'Переданы некорректные данные${Object.values(err.errors).map((error) => error.message).join(', ')}` }));
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -89,7 +90,7 @@ const disLikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError({ message: `'Переданы некорректные данные${Object.values(err.errors).map((error) => error.message).join(', ')}` }));
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
       }
