@@ -5,6 +5,7 @@ const { OK } = require('../utils/constants');
 const {
   AuthError, BadRequestError, ConflictError, NotFoundError,
 } = require('../utils/errors/index');
+// const { Error } = require('mongoose');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -49,7 +50,8 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким электронным адресом уже зарегистрирован'));
-      } else if (err.name === 'ValidationError') {
+        return;
+      } if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при регистрации пользователя'));
       } else {
         next(err);
