@@ -8,6 +8,7 @@ const signinRouter = require('./routes/signin');
 const signupRouter = require('./routes/signup');
 const auth = require('./middlewares/auth');
 const { NOT_FOUND } = require('./utils/constants');
+const { error } = require('./middlewares/error');
 
 const { PORT = 3000 } = process.env;
 
@@ -36,7 +37,9 @@ app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: 'Страница не найден' });
 });
 
+app.use(errors());
+app.use(error);
+
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
-app.use(errors());
