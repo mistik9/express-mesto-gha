@@ -8,11 +8,11 @@ const {
 
 const cardRouter = express.Router();
 
-cardRouter.get('/cards/', getCards);
+cardRouter.get('/', getCards);
 
-cardRouter.delete('/cards/:cardId', deleteCard);
+cardRouter.delete('/:cardId', deleteCard);
 
-cardRouter.post('/cards/', celebrate({
+cardRouter.post('/', celebrate({
   body: Joi.object().keys({
     link: Joi.string()
       .pattern(RegExp),
@@ -20,8 +20,8 @@ cardRouter.post('/cards/', celebrate({
   }),
 }), createCard);
 
-cardRouter.put('/cards/:cardId/likes', likeCard);
+cardRouter.put('/:cardId/likes', likeCard);
 
-cardRouter.delete('/cards/:cardId/likes', disLikeCard);
+cardRouter.delete('/:cardId/likes', disLikeCard);
 
 module.exports = cardRouter;
