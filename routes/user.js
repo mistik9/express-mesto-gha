@@ -3,9 +3,9 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getUsers, findUser, updateUser, updateAvatar,
 } = require('../controllers/user');
+const { RegExp } = require('../utils/constants');
 
 const userRouter = express.Router();
-const { RegExp } = require('../utils/constants');
 
 userRouter.get('/users', getUsers);
 
