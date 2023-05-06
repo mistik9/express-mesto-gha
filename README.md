@@ -19,9 +19,18 @@
 - express.js
 - node.js
 - mongodb
+- mongoose
 - postman
+- bcryptjs
+- jsonwebtoken
+- joi
+- celebrate
+- validator
+- ESLint
 
 ##  Функционал
+- Регистрация пользователя
+- Авторизация пользователя
 - Получение данных о всех пользователях
 - Поиск конкретного пользователя
 - Cоздание пользователя
