@@ -14,15 +14,17 @@ const getCards = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
+  const { userId } = req.user;
   Card.findById(cardId)
     .orFail(() => {
       throw new NotFoundError('Карточка не найдена');
     })
     .then((card) => {
-      Card.deleteOne({ _id: card._id, owner: req.user._id })
+      const { owner: cardOwnerId } = card;
+      Card.deleteOne()
         .then(() => {
-          if (res.deletedCount === 0) {
-            throw new ForbiddenError('Карточка не прнадлежит пользователю');
+          if (cardOwnerId.valueOf() !== userId) {
+            next(new ForbiddenError('Карточка не прнадлежит пользователю'));
           } else {
             res.status(OK).send({ message: 'Карточка удалена' });
           }

@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
-const { NotFoundError } = require('./utils/errors/NotFoundError');
+const { NOT_FOUND } = require('./utils/constants');
 const {
   userRouter, cardRouter, signupRouter, signinRouter,
 } = require('./routes/index');
@@ -27,7 +27,9 @@ app.use(auth);
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.use((req, res, next) => next(new NotFoundError('Страницы по запрошенному URL не существует')));
+app.use((req, res) => {
+  res.status(NOT_FOUND).send({ message: 'Страница не найдена' });
+});
 app.use(errors());
 app.use(errorHandler);
 
