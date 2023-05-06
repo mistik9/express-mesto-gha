@@ -3,11 +3,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
-const { NOT_FOUND } = require('./utils/constants');
+const { NotFoundError } = require('./utils/errors/NotFoundError');
 const {
   userRouter, cardRouter, signupRouter, signinRouter,
 } = require('./routes/index');
 const auth = require('./middlewares/auth');
+const errorHandler = require('./middlewares/errorHandler');
 
 const { PORT = 3000 } = process.env;
 
@@ -26,8 +27,9 @@ app.use(auth);
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.use((req, res, next) => next(res.status(NOT_FOUND).send({ message: 'Страница не найден' })));
+app.use((req, res, next) => next(new NotFoundError('Страницы по запрошенному URL не существует')));
 app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

@@ -12,9 +12,27 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-const findUser = (req, res, next) => {
-  const { userId } = req.params;
+const getUserInfo = (req, res, next) => {
+  const { userId } = req.user;
   User.findById(userId)
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
+    })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
+};
+
+const findUser = (req, res, next) => {
+  const { id } = req.params;
+  User.findById(id)
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
@@ -113,6 +131,7 @@ const login = (req, res, next) => {
 
 module.exports = {
   getUsers,
+  getUserInfo,
   findUser,
   createUser,
   updateUser,

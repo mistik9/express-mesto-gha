@@ -46,7 +46,6 @@ const createCard = (req, res, next) => {
       res.status(OK).send(card);
     })
     .catch((err) => {
-      console.log(err.name)
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
       } else {
