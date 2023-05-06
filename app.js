@@ -11,11 +11,12 @@ const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 
 const { PORT = 3000 } = process.env;
+const URL = 'mongodb://127.0.0.1:27017/mestodb';
 
 const app = express();
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
+mongoose.connect(URL)
   .then(console.log('DB is connected'))
   .catch((err) => console.log(err));
 
